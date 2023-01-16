@@ -1,9 +1,15 @@
 <p>{{titre}}</p>
-<button  mat-flat-button color="warn">Click me</button>
- <div *ngFor="let a of assignments"
-     appRendu
- >
+<h2>{{nomDevoir}}</h2>
+
+<form ngForm #assignmentForm (submit)="onSubmit($event)">
+    <input matInput placeholder="Nom du devoir" name="nom" [(ngModel)]="nomDevoir" required>
+  <button mat-stroked-button color="primary">
+    Ajouter un devoir
+  </button>
+</form>
+
+<div *ngFor="let a of assignments" appRendu>
   <p>
     {{a.nom}} rendu pour le {{a.dateDeRendu}}.
   </p>
- </div>
+</div>

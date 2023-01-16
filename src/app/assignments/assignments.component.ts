@@ -7,6 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AssignmentsComponent {
   titre = 'Liste des Assignments';
+  // Champs du formulaire
+  nomDevoir = '';
+  dateDeRendu = '';
+
   assignments = [
     {
       nom:"Devoir Angular de Mr Buffa",
@@ -31,5 +35,10 @@ export class AssignmentsComponent {
     } else {
       return 'red';
     }
+  }
+
+  onSubmit(event:any) {
+    console.log(event);
+    console.log("Formulaire soumis nom = " + this.nomDevoir);
   }
 }
