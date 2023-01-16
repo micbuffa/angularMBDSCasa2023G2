@@ -1,0 +1,9 @@
+<p>{{titre}}</p>
+<button  mat-flat-button color="warn">Click me</button>
+ <div *ngFor="let a of assignments"
+     appRendu
+ >
+  <p>
+    {{a.nom}} rendu pour le {{a.dateDeRendu}}.
+  </p>
+ </div>
