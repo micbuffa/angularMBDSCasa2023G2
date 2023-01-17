@@ -8,9 +8,9 @@ import { Assignment } from './assignment.model';
 })
 export class AssignmentsComponent {
   titre = 'Liste des Assignments';
-  // Champs du formulaire
-  nomDevoir = '';
-  dateDeRendu!:Date;
+  formVisible=false;
+
+  assignmentSelectionne!:Assignment;
 
   assignments:Assignment[] = [
     {
@@ -38,17 +38,16 @@ export class AssignmentsComponent {
     }
   }
 
-  onSubmit(event:any) {
-    //console.log(event);
-    console.log("Formulaire soumis nom = " + this.nomDevoir + " date = " + this.dateDeRendu);
-    const newAssignment = new Assignment();
-    newAssignment.nom = this.nomDevoir;
-    newAssignment.dateDeRendu = this.dateDeRendu;
-    newAssignment.rendu = false;
+  assignmentClique(a:Assignment) {
+    console.log("CLICK : " + a.nom);
+    this.assignmentSelectionne = a;
+  }
 
-    // on l'ajoute au tableau
-    this.assignments.push(newAssignment);
+  onAddAssignment(a:Assignment) {
+    // on ajoute l'assignment envoyé par le fils au tableau
+    this.assignments.push(a);
 
-
+    // on cache le formulaire et on affiche la liste
+    this.formVisible = false;
   }
 }

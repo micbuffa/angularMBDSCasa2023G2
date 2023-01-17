@@ -9,8 +9,11 @@
   padding:3px
 }
 
-.form {
-  display:flex;
-  flex-direction:column;
-  margin:5px;
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.ajouterBtn {
+  align-self: flex-end;
 }
