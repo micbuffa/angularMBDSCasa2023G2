@@ -9,16 +9,19 @@ import { LoggingService } from './logging.service';
 export class AssignmentsService {
   assignments: Assignment[] = [
     {
+      id:1,
       nom: 'Devoir Angular de Mr Buffa',
       dateDeRendu: new Date('2023-01-26'),
       rendu: false,
     },
     {
+      id:2,
       nom: 'Devoir R de Mr Pasquier',
       dateDeRendu: new Date('2023-02-15'),
       rendu: false,
     },
     {
+      id:3,
       nom: 'Devoir Grails de Mr galli',
       dateDeRendu: new Date('2022-12-16'),
       rendu: true,
@@ -33,10 +36,17 @@ export class AssignmentsService {
     return of(this.assignments);
   }
 
+  getAssignment(id:number):Observable<Assignment|undefined> {
+    return of(this.assignments.find(a => a.id === id));
+  }
+
   /* Cette méthode ajoute un assignment au tableau
       et retourne un Observable qui contient une string
       qui indique que tout s'est bien passé */
   addAssignment(a: Assignment):Observable<string> {
+    // on génére un id aléatoire pour l'assignment
+    a.id = Math.floor(Math.random() * 100000000000000000);
+
     this.assignments.push(a);
     this.loggingService.log(a.nom, "ajouté");
 
