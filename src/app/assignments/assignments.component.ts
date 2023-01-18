@@ -10,7 +10,6 @@ import { Assignment } from './assignment.model';
 export class AssignmentsComponent implements OnInit {
   titre = 'Liste des Assignments';
 
-  assignmentSelectionne!: Assignment;
   assignments: Assignment[] = [];
 
   constructor(private assignmentsService:AssignmentsService) {}
@@ -25,28 +24,5 @@ export class AssignmentsComponent implements OnInit {
       console.log("DONNEES ARRIVEES");
     });
     console.log("REQUETE ENVOYEE VIA LE SERVICE")
-  }
-
-  getColor(a: any) {
-    if (a.rendu) {
-      return 'green';
-    } else {
-      return 'red';
-    }
-  }
-
-  assignmentClique(a: Assignment) {
-    console.log('CLICK : ' + a.nom);
-    this.assignmentSelectionne = a;
-  }
-
-  /* Cette méthode
-   * - est appelée par le fils quand il veut supprimer un élément
-   * du tableau situé dans le père */
-  onDeleteAssignment(a: Assignment) {
-    this.assignmentsService.deleteAssignment(a)
-    .subscribe(message => {
-      console.log(message);
-    });
   }
 }
