@@ -16,10 +16,19 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
+import { Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { RenduDirective } from './shared/rendu.directive';
 import { AssignmentDetailComponent } from './assignments/assignment-detail/assignment-detail.component';
 import { AddAssignmentComponent } from './assignments/add-assignment/add-assignment.component'
+
+const routes : Routes = [
+  { path: '', component: AssignmentsComponent },
+  { path: 'home', component: AssignmentsComponent },
+  { path: 'add', component: AddAssignmentComponent }
+]
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +44,7 @@ import { AddAssignmentComponent } from './assignments/add-assignment/add-assignm
     MatInputModule, MatFormFieldModule,MatDatepickerModule,
     MatNativeDateModule, MatListModule,MatCardModule,
     MatCheckboxModule,
-    FormsModule
+    FormsModule, RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]

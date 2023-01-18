@@ -1,14 +1,9 @@
-<app-add-assignment *ngIf="formVisible"
-                    (nouvelAssignment)="onAddAssignment($event)"
->
-
-</app-add-assignment>
-
-
-<main *ngIf="!formVisible" class="container">
-  <button mat-flat-button color="primary" (click)="formVisible=true"
-          class="ajouterBtn"
-  >Ajouter devoir</button>
+<main class="container">
+  <a routerLink="/add">
+    <button mat-flat-button color="primary" class="ajouterBtn">
+      Ajouter devoir
+    </button>
+  </a>
 
   <h2>{{titre}}</h2>
   <mat-divider></mat-divider>
@@ -21,7 +16,7 @@
     <mat-divider></mat-divider>
   </mat-list>
 
-  <app-assignment-detail [assignmentTransmis]="assignmentSelectionne">
+  <app-assignment-detail [assignmentTransmis]="assignmentSelectionne" (delAssignment)="onDeleteAssignment($event)">
 
   </app-assignment-detail>
 </main>

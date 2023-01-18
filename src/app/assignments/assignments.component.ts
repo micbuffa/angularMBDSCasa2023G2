@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AssignmentsService } from '../shared/assignments.service';
 import { Assignment } from './assignment.model';
 
 @Component({
@@ -6,31 +7,27 @@ import { Assignment } from './assignment.model';
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css'],
 })
-export class AssignmentsComponent {
+export class AssignmentsComponent implements OnInit {
   titre = 'Liste des Assignments';
-  formVisible=false;
 
-  assignmentSelectionne!:Assignment;
+  assignmentSelectionne!: Assignment;
+  assignments: Assignment[] = [];
 
-  assignments:Assignment[] = [
-    {
-      nom:"Devoir Angular de Mr Buffa",
-      dateDeRendu: new Date("2023-01-26"),
-      rendu : false
-    },
-    {
-      nom:"Devoir R de Mr Pasquier",
-      dateDeRendu: new Date("2023-02-15"),
-      rendu : false
-    },
-    {
-      nom:"Devoir Grails de Mr galli",
-      dateDeRendu: new Date("2022-12-16"),
-      rendu : true
-    }
-  ];
+  constructor(private assignmentsService:AssignmentsService) {}
 
-  getColor(a:any) {
+  ngOnInit() {
+    console.log("AVANT AFFICHAGE");
+
+    // On va chercher les données avec le service assignmentsService
+    this.assignmentsService.getAssignments()
+    .subscribe(assignments => {
+      this.assignments = assignments;
+      console.log("DONNEES ARRIVEES");
+    });
+    console.log("REQUETE ENVOYEE VIA LE SERVICE")
+  }
+
+  getColor(a: any) {
     if (a.rendu) {
       return 'green';
     } else {
@@ -38,16 +35,18 @@ export class AssignmentsComponent {
     }
   }
 
-  assignmentClique(a:Assignment) {
-    console.log("CLICK : " + a.nom);
+  assignmentClique(a: Assignment) {
+    console.log('CLICK : ' + a.nom);
     this.assignmentSelectionne = a;
   }
 
-  onAddAssignment(a:Assignment) {
-    // on ajoute l'assignment envoyé par le fils au tableau
-    this.assignments.push(a);
-
-    // on cache le formulaire et on affiche la liste
-    this.formVisible = false;
+  /* Cette méthode
+   * - est appelée par le fils quand il veut supprimer un élément
+   * du tableau situé dans le père */
+  onDeleteAssignment(a: Assignment) {
+    this.assignmentsService.deleteAssignment(a)
+    .subscribe(message => {
+      console.log(message);
+    });
   }
 }
