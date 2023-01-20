@@ -20,10 +20,12 @@ export class AuthService {
     this.loggedIn = false;
   }
 
+  // Retourne une promesse. Si on devait l'utiliser on ferait
+  // isAdmin.then(admin => { console.log(admin) });
   isAdmin() {
     let promesse = new Promise((resolve, reject) => {
       resolve(this.loggedIn);
-    })
+    });
 
     return promesse;
   }

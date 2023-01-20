@@ -1,3 +1,4 @@
+<!-- PARTIE FIXE -->
 <h1>
   <nav>
     <a routerLink="/home">
@@ -5,5 +6,8 @@
     </a>
   </nav>
 </h1>
+<mat-slide-toggle color="warn" (click)="login()">Connecté</mat-slide-toggle>
+<button mat-raised-button color="warn" (click)="genereTestData()">Peupler BD</button>
 
+<!-- PARTIE VARIABLE, affiche le composant qui correspond à l'URL -->
 <router-outlet></router-outlet>

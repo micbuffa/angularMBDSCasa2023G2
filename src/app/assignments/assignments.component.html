@@ -6,7 +6,73 @@
   </a>
 
   <h2>{{titre}}</h2>
+  <p>Page : {{page}}, nombre de pages {{ totalPages}}, nb documents : {{totalDocs}}</p>
+  <p>Nb documents par page :
+    <input type="range" min="2" max="100" [(ngModel)]="limit" (change)="getAssignments()"> {{limit}}
+  </p>
+  <div>
+    <button mat-raised-button color="primary" (click)="premierePage()">Première</button>
+
+    <button mat-raised-button color="primary" (click)="pagePrecedente()" [disabled]="!hasPrevPage">
+      Précédente
+    </button>
+    <button mat-raised-button color="primary" [disabled]="!hasNextPage" (click)="pageSuivante()">Suivante</button>
+
+    <button mat-raised-button color="primary" (click)="dernierePage()">Dernière</button>
+
+  </div>
   <mat-divider></mat-divider>
+
+  <table mat-table [dataSource]="assignments" class="mat-elevation-z8">
+
+
+    <!-- Colonne nom -->
+    <ng-container matColumnDef="nom">
+      <th mat-header-cell *matHeaderCellDef> Nom </th>
+      <td mat-cell *matCellDef="let a"> {{a.nom}} </td>
+    </ng-container>
+
+    <!-- Colonne dateDeRendu -->
+    <ng-container matColumnDef="dateDeRendu">
+      <th mat-header-cell *matHeaderCellDef> Date de rendu </th>
+      <td mat-cell *matCellDef="let a"> {{a.dateDeRendu}} </td>
+    </ng-container>
+
+    <!-- Colonne rendu -->
+    <ng-container matColumnDef="rendu">
+      <th mat-header-cell *matHeaderCellDef> Rendu </th>
+      <td mat-cell *matCellDef="let a"> {{a.rendu}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [length]="totalPages"
+                 [pageSize]="limit"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 (page)="processPaginator($event)"
+  >
+  </mat-paginator>
+
+  <p></p>
+  <p></p>
+
+  <table>
+    <thead>
+      <th>Nom</th>
+      <th>Date de rendu</th>
+      <th>Rendu</th>
+    </thead>
+    <tr *ngFor="let a of assignments">
+      <td>{{a.nom}}</td>
+      <td>{{a.dateDeRendu | date}}</td>
+      <td>{{a.rendu}}</td>
+    </tr>
+  </table>
+
+
+
 
   <mat-list *ngFor="let a of assignments">
     <div mat-subheader>{{a.dateDeRendu | date:'dd/MM/yyyy'}}</div>

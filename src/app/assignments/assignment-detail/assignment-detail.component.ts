@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsService } from 'src/app/shared/assignments.service';
+import { AuthService } from 'src/app/shared/auth.service';
 import { Assignment } from '../assignment.model';
 
 @Component({
@@ -13,7 +14,8 @@ export class AssignmentDetailComponent implements OnInit {
 
   constructor(private assignmentsService:AssignmentsService,
               private activatedRoute:ActivatedRoute,
-              private router:Router) {}
+              private router:Router,
+              private authService: AuthService) {}
 
   ngOnInit() {
     // On récupère l'id dans l'URL, à l'aide de l'objet activatedRoute
@@ -65,5 +67,9 @@ export class AssignmentDetailComponent implements OnInit {
       // et on retourne à la page d'accueil
       this.router.navigate(['/home']);
     });
+  }
+
+  isAdmin():boolean {
+    return this.authService.loggedIn;
   }
 }

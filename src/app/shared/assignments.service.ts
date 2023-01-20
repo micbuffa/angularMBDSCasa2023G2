@@ -1,74 +1,88 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { Assignment } from '../assignments/assignment.model';
 import { LoggingService } from './logging.service';
+
+import { bdInitialAssignments } from './data';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssignmentsService {
-  assignments: Assignment[] = [
-    {
-      id:1,
-      nom: 'Devoir Angular de Mr Buffa',
-      dateDeRendu: new Date('2023-01-26'),
-      rendu: false,
-    },
-    {
-      id:2,
-      nom: 'Devoir R de Mr Pasquier',
-      dateDeRendu: new Date('2023-02-15'),
-      rendu: false,
-    },
-    {
-      id:3,
-      nom: 'Devoir Grails de Mr galli',
-      dateDeRendu: new Date('2022-12-16'),
-      rendu: true,
-    },
-  ];
-  constructor(private loggingService:LoggingService) {}
+  assignments: Assignment[] = [];
 
-  /* Cette méthode retourne un Observable qui contient
-     un tableau d'assignments Observable<Assignment[]>
-    On devra le consommer avec un subscribe() */
+  constructor(private loggingService:LoggingService,
+              private http:HttpClient) {}
+
+  URI="http://localhost:8010/api/assignments";
+  //URI="https://backmbds2023g2.herokuapp.com/api/assignments";
+
+  /* Cette méthode requête le serveur backend et renvoie un
+     tableau d'assignments Observable */
   getAssignments(): Observable<Assignment[]> {
-    return of(this.assignments);
+    return this.http.get<Assignment[]>(this.URI);
+  }
+
+  getAssignmentsAvecPagination(page:number, limit:number): Observable<any> {
+    return this.http.get<any>(this.URI + "?page=" + page + "&limit=" + limit);
   }
 
   getAssignment(id:number):Observable<Assignment|undefined> {
-    return of(this.assignments.find(a => a.id === id));
+    return this.http.get<Assignment>(this.URI + "/" + id);
   }
 
   /* Cette méthode ajoute un assignment au tableau
       et retourne un Observable qui contient une string
       qui indique que tout s'est bien passé */
-  addAssignment(a: Assignment):Observable<string> {
+  addAssignment(a: Assignment):Observable<any> {
     // on génére un id aléatoire pour l'assignment
     a.id = Math.floor(Math.random() * 100000000000000000);
 
-    this.assignments.push(a);
     this.loggingService.log(a.nom, "ajouté");
 
-    return of("Assignment ajouté");
+    return this.http.post(this.URI, a);
   }
 
-  updateAssignment(a: Assignment):Observable<string> {
-    // Pour le moment on n'a pas vraiment fait de modifications
-    // on a juste mis rendu=true sur une référence à un
-    // objet du tableau...
-
-    // Plus tard on enverra une requête AJAX PUT vers un web service
+  updateAssignment(a: Assignment):Observable<any> {
     this.loggingService.log(a.nom, "modifié");
 
-    return of("Assignment modifié");
+    return this.http.put(this.URI, a);
   }
 
-  deleteAssignment(a:Assignment):Observable<string> {
-    // on supprime l'assignment envoyé par le fils dans le tableau
-    this.assignments.splice(this.assignments.indexOf(a), 1);
+  deleteAssignment(a:Assignment):Observable<any> {
     this.loggingService.log(a.nom, "supprimé");
 
-    return of("Assignment supprimé");
+    return this.http.delete(this.URI + "/" + a._id);
+  }
+
+  peuplerBD() {
+    bdInitialAssignments.forEach(a => {
+      const nouvelAssignment = new Assignment();
+      nouvelAssignment.nom = a.nom;
+      nouvelAssignment.dateDeRendu = new Date(a.dateDeRendu);
+      nouvelAssignment.rendu = a.rendu;
+
+      this.addAssignment(nouvelAssignment)
+      .subscribe(() => {
+        console.log("Assignment ajouté par peuplerBD");
+      })
+    });
+  }
+
+  peuplerBDavecForkJoin():Observable<any> {
+    let appelsVersAddAssignment:Observable<any>[] = [];
+
+    bdInitialAssignments.forEach(a => {
+      const nouvelAssignment = new Assignment();
+      nouvelAssignment.nom = a.nom;
+      nouvelAssignment.dateDeRendu = new Date(a.dateDeRendu);
+      nouvelAssignment.rendu = a.rendu;
+
+      appelsVersAddAssignment.push(this.addAssignment(nouvelAssignment))
+    });
+
+    return forkJoin(appelsVersAddAssignment);
   }
 }
+
